@@ -31,8 +31,17 @@ class AdminEditController extends Controller
 
     //Schedule
     public function editSchedule(){
-        $data = Jadwal::all();
-        $teacher = DB::table('USERS AS US')->join('GURU AS GU','GU.ID_USER','=', 'US.ID')->get();
+        $data = DB::table('jadwal as jd')
+            ->join('guru as gu','gu.id','=','jd.id_guru')
+            ->join('users as us','us.id','=','gu.id_user')
+            ->join('kelas as kl','kl.id','=','jd.id_kelas')
+            ->join('pelajaran as pl','pl.id','=','jd.id_pelajaran')
+            ->join('jam as jm','jm.id','=','jd.jam')
+            ->selectRaw("jd.* , kl.kelas as kelas, kl.jurusan as jurusan, kl.pararel as pararel, us.name as guru, pl.nama as pelajaran, jm.jam as jam")
+            ->get();
+        $teacher = DB::table('USERS AS US')
+            ->join('GURU AS GU','GU.ID_USER','=', 'US.ID')
+            ->get();
         $class = Kelas::all();
         $time = Jam::all();
         $lesson = Pelajaran::all();

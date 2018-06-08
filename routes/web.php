@@ -35,9 +35,6 @@ Route::prefix('/user')->group(function(){
     Route::get('/close-absence','AbsenceController@closeAbsence')->name('user.close-absence');
     Route::post('/update-absence','AbsenceController@updateStatusAbsence')->name('user.update-absence');
 
-    Route::get('/report','ReportController@index')->name('user.report');
-
-    Route::get('/schedule','ScheduleController@index')->name('user.schedule');
 });
 
 Route::prefix('/admin')->group(function(){
@@ -80,8 +77,10 @@ Route::prefix('/admin')->group(function(){
     Route::post('/delete-teacher','AdminEditController@deleteTeacher')->name('admin.teacher-delete');
     Route::post('/update-teacher','AdminEditController@updateTeacher')->name('admin.teacher-edit');
 
-    Route::get('/absence','AdminEditController@editAbsence')->name('admin.absence');
-    Route::post('/edit-absence','AdminEditController@editAbsence')->name('admin.absence');
+    Route::get('/absence','ReportController@index')->name('report.absence');
 
 });
 
+
+Route::get("/chart_all", 'ReportController@getChartAll')->name('chart.all');
+Route::get("/chart_table/{date}", 'ReportController@getChartTable')->name('chart.table');

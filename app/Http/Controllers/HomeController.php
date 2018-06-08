@@ -40,7 +40,7 @@ class HomeController extends Controller
         if (!$func->user->hasRole('admin')){
             $func->call();
             if ($func->check_active){
-
+                return redirect()->route('user.absence');
             }else{
                 $data = $func->setDetailedAbsence();
                 if ($data){

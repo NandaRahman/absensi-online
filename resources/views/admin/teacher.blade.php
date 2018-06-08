@@ -17,23 +17,27 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         @if(!empty($data))
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <table class="table table-striped table-bordered table-hover" id="table">
                                 <thead>
                                 <tr>
                                     <th>No. </th>
                                     <th>NIP</th>
+                                    <th>Username</th>
                                     <th>Guru</th>
                                     <th>Telepon</th>
                                     <th>Alamat</th>
                                     <th>Password Awal</th>
-                                    <th colspan="2">Opsi</th>
+                                    <th>Edit</th>
+                                    <th>Hapus</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <?php $i=1?>
                                 @foreach($data as $val)
                                     <tr class="odd gradeA">
-                                        <td>{{$val->id}}</td>
+                                        <td>{{$i}}</td>
                                         <td>{{$val->nomor_pegawai}}</td>
+                                        <td>{{$val->username}}</td>
                                         <td>{{$val->name}}</td>
                                         <td>{{$val->telepon}}</td>
                                         <td>{{$val->alamat}}</td>
@@ -49,77 +53,82 @@
                                             </form>
                                         </td>
                                     </tr>
-                                    <!-- Modal -->
-                                    <div id="editData-{{$val->id}}" class="modal fade" role="dialog">
-                                        <div class="modal-dialog">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    <h4 class="modal-title">Perbarui Data Guru</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="post" action="{{ route('admin.teacher-edit') }}" enctype="multipart/form-data">
-                                                        {{ csrf_field() }}
-                                                        <input type="hidden" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="nama" placeholder="Masukan Nama" name="id" value="{{$val->id}}">
-                                                        <div class="form-group">
-                                                            <label for="nama">Nama</label>
-                                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="nama" placeholder="Masukan Nama" name="name" value="{{$val->name}}">
-                                                            @if ($errors->has('name'))
-                                                                <span class="invalid-feedback">
-                                                                <strong>{{ $errors->first('name') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="username">Username</label>
-                                                            <input type="text" class="form-control {{ $errors->has('username') ? ' is-invalid' : '' }}" id="username" placeholder="Enter Username" name="username" value="{{$val->username}}">
-                                                            @if ($errors->has('username'))
-                                                                <span class="invalid-feedback">
-                                                                <strong>{{ $errors->first('username') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="nomor_pegawai">Nomor Pegawai</label>
-                                                            <input type="text" class="form-control {{ $errors->has('nomor_pegawai') ? ' is-invalid' : '' }}" id="nomor_pegawai" placeholder="Masukan NIP" name="nomor_pegawai" value="{{$val->nomor_pegawai}}">
-                                                            @if ($errors->has('nomor_pegawai'))
-                                                                <span class="invalid-feedback">
-                                                                <strong>{{ $errors->first('nomor_pegawai') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="telepon">Telepon</label>
-                                                            <input type="text" class="form-control {{ $errors->has('telepon') ? ' is-invalid' : '' }}" id="telepon" placeholder="Enter telepon" name="telepon" value="{{$val->telepon}}">
-                                                            @if ($errors->has('telepon'))
-                                                                <span class="invalid-feedback">
-                                                                <strong>{{ $errors->first('telepon') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="alamat">Alamat</label>
-                                                            <input type="text" class="form-control {{ $errors->has('alamat') ? ' is-invalid' : '' }}" id="alamat" placeholder="Masukan Alamat" name="alamat" value="{{$val->alamat}}">
-                                                            @if ($errors->has('alamat'))
-                                                                <span class="invalid-feedback">
-                                                                <strong>{{ $errors->first('alamat') }}</strong>
-                                                            </span>
-                                                            @endif
-                                                        </div>
-                                                        <button type="submit" class="btn btn-default">Submit</button>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <?php $i++?>
                                 @endforeach
                                 </tbody>
                             </table>
+                            <script >
+                                $('#table').DataTable();
+                            </script>
+                        @foreach($data as $val)
+                            <!-- Modal -->
+                                <div id="editData-{{$val->id}}" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Perbarui Data Guru</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="{{ route('admin.teacher-edit') }}" enctype="multipart/form-data">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="nama" placeholder="Masukan Nama" name="id" value="{{$val->id}}">
+                                                    <div class="form-group">
+                                                        <label for="nama">Nama</label>
+                                                        <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="nama" placeholder="Masukan Nama" name="name" value="{{$val->name}}">
+                                                        @if ($errors->has('name'))
+                                                            <span class="invalid-feedback">
+                                                                <strong>{{ $errors->first('name') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username">Username</label>
+                                                        <input type="text" class="form-control {{ $errors->has('username') ? ' is-invalid' : '' }}" id="username" placeholder="Enter Username" name="username" value="{{$val->username}}">
+                                                        @if ($errors->has('username'))
+                                                            <span class="invalid-feedback">
+                                                                <strong>{{ $errors->first('username') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nomor_pegawai">Nomor Pegawai</label>
+                                                        <input type="text" class="form-control {{ $errors->has('nomor_pegawai') ? ' is-invalid' : '' }}" id="nomor_pegawai" placeholder="Masukan NIP" name="nomor_pegawai" value="{{$val->nomor_pegawai}}">
+                                                        @if ($errors->has('nomor_pegawai'))
+                                                            <span class="invalid-feedback">
+                                                                <strong>{{ $errors->first('nomor_pegawai') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="telepon">Telepon</label>
+                                                        <input type="text" class="form-control {{ $errors->has('telepon') ? ' is-invalid' : '' }}" id="telepon" placeholder="Enter telepon" name="telepon" value="{{$val->telepon}}">
+                                                        @if ($errors->has('telepon'))
+                                                            <span class="invalid-feedback">
+                                                                <strong>{{ $errors->first('telepon') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="alamat">Alamat</label>
+                                                        <input type="text" class="form-control {{ $errors->has('alamat') ? ' is-invalid' : '' }}" id="alamat" placeholder="Masukan Alamat" name="alamat" value="{{$val->alamat}}">
+                                                        @if ($errors->has('alamat'))
+                                                            <span class="invalid-feedback">
+                                                                <strong>{{ $errors->first('alamat') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <button type="submit" class="btn btn-default">Submit</button>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         @else
                             <div class="panel panel-default">
                                 <div class="panel-body center bg-danger">Tidak Ada Data</div>

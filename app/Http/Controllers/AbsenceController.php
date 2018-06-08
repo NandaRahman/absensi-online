@@ -40,7 +40,7 @@ class AbsenceController extends Controller
         $this->init();
         $this->call();
         if ($this->check_active === false){
-            return redirect()->route('user.report');
+            return redirect()->route('home');
         }
         return view('user/absence')->with('data', $this->check_active);
     }
@@ -91,6 +91,7 @@ class AbsenceController extends Controller
                 ->join('absen as ab','ab.id_jadwal','=','jd.id')
                 ->where('jd.id_guru','=',$this->get_guru->id)
                 ->where('jd.hari','=',date('N'))
+                ->whereRaw('DATE_FORMAT(ab.absen_buka, "%Y-%m-%d")='.date('Y-m-d'))
                 ->select('jd.*', 'jm.jam')
                 ->orderBy('jm.jam')
                 ->groupBy('jd.id')
@@ -129,11 +130,12 @@ class AbsenceController extends Controller
         $absen = DB::table('absen as a')
             ->join('jadwal as j','a.id_jadwal','=','j.id')
             ->join('siswa as s','a.id_siswa','=','s.id')
+            ->join('jam as jm','j.jam','=','jm.id')
             ->where('j.id_guru','=',$this->get_guru->id)
             ->whereRaw('DATE_FORMAT(a.absen_buka, "%H:%i:%s")<='."'".date('H:i:s')."'")
             ->whereRaw('DATE_FORMAT(a.absen_tutup, "%H:%i:%s")>='."'".date('H:i:s')."'")
             ->whereRaw('DATE_FORMAT(a.absen_buka, "%Y-%m-%d")='."'".date('Y-m-d')."'")
-            ->select('a.*', 'j.id_guru','j.id_kelas','s.nama')
+            ->select('a.*', 'j.id_guru','j.id_kelas','s.nama','jm.jam')
             ->get();
         if (sizeof($absen) > 0){
             return $absen;
